@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Analysis</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            color: #38bdf8;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+        .upload-card {
+            grid-column: span 3;
+            justify-self: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            justify-items: left;
+        }
+
+        .score {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .good { color: #22c55e; }
+        .medium { color: #facc15; }
+        .bad { color: #ef4444; }
+
+        .suggestions {
+            padding: 20px;
+        }
+
+        ul {
+            line-height: 1.8;
+        }
+
+        .upload-card input[type="file"] {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .upload-card button {
+            background: #38bdf8;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-card button:hover {
+            background: #0ea5e9;
+        }
+        //
+                .file-upload {
+            margin: 15px 0;
+        }
+
+        .file-btn {
+            background: #38bdf8;
+            color: #0f172a;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .file-btn:hover {
+            background: #0ea5e9;
+        }
+
+        #file-name {
+            margin-left: 10px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .upload-btn {
+            background: #22c55e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .upload-btn:hover {
+            background: #16a34a;
+        }
+
+    </style>
+</head>
+
+<body>
+<h1>AI Resume Analyst</h1>
+<div class="container">
+
+
+    <!-- Upload Card -->
+    <div class="card upload-card">
+        <h3>Upload Resume</h3>
+        <form action="/upload" method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+
+    <div class="file-upload">
+        <input type="file" id="resume" name="resume" hidden required>
+
+        <label for="resume" class="file-btn">
+            Choose Resume
+        </label>
+
+        <span id="file-name">No file selected</span>
+    </div>
+
+    <button id="btn" type="submit" class="upload-btn">Upload</button>
+
+</form>
+    <p id="loading" style="display: none" >Analyzing Resume</p>
+    </div>
+
+    {% if data %}
+    <div class="card">
+        <h3>Spelling</h3>
+        <div class="score">{{ data.spelling.score }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Grammar</h3>
+        <div class="score">{{ data.grammar.score }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Clarity</h3>
+        <div class="score">{{ data.clarity.score }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Relevance</h3>
+        <div class="score">{{ data.relevance.score }}</div>
+    </div>
+
+
+    <div class="card">
+        <h3>Tone</h3>
+        <div class="score">{{ data.tone.score }}</div>
+    </div>
+
+</div>
+
+<div class="suggestions">
+    <h2>Suggestions</h2>
+    <ul>
+        {% for s in data.suggestions %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<script>
+    document.getElementById("resume").addEventListener("change", function(){
+    document.getElementById("file-name").innerText = this.files[0].name;
+    });
+
+    function showLoading(){
+        document.getElementById("loading").style.display = "block"
+        document.getElementById("btn").disabled = true
+        document.getElementById("btn").innerText = "Processing...."
+    }
+
+</script>
+</body>
+</html>
